@@ -1,0 +1,6 @@
+[package]
+name = "rust-monkey"
+version = "0.1.0"
+authors = ["ikkun2501 <ikkun2501@gmail.com>"]
+
+[dependencies]
