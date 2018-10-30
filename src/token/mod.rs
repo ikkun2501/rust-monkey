@@ -1,15 +1,12 @@
-struct Token {
-    token_type: TokenType,
-    literal: String,
-}
 
-enum TokenType {
+#[derive(Debug, Clone, PartialEq)]
+pub enum Token{
     ILLEGAL,
     EOF,
     // 識別子＋リテラル
-    IDENT,
+    IDENT(String),
     // 整数
-    INT,
+    INT(u64),
 
     // 演算子
     ASSIGN,
