@@ -1,7 +1,6 @@
-
 #[derive(Debug, Clone, PartialEq)]
-pub enum Token{
-    ILLEGAL,
+pub enum Token {
+    ILLEGAL(String),
     EOF,
     // 識別子＋リテラル
     IDENT(String),
@@ -23,5 +22,7 @@ pub enum Token{
     // キーワード
     FUNCTION,
     LET,
+
+    LITERAL(String),
 
 }
