@@ -43,6 +43,12 @@ impl<'a> Lexer<'a> {
             b'}' => Token::RBRACE,
             b',' => Token::COMMA,
             b';' => Token::SEMICOLON,
+            b'!' => Token::BANG,
+            b'-' => Token::MINUS,
+            b'/' => Token::SLASH,
+            b'*' => Token::ASTERISK,
+            b'<' => Token::LT,
+            b'>' => Token::GT,
             0 => Token::EOF,
             _ => if is_letter(self.ch) {
                 return lookup_ident(self.read_identifier());
@@ -93,10 +99,12 @@ fn is_letter(ch: u8) -> bool {
 
     return b'a' <= ch && ch <= b'z' || b'A' <= ch && ch <= b'Z' || ch == b'_';
 }
+
 // 数値判定
-fn is_digit(ch :u8)->bool{
+fn is_digit(ch: u8) -> bool {
     return b'0' <= ch && ch <= b'9';
 }
+
 #[cfg(test)]
 mod tests {
     use lexer::Lexer;
@@ -105,17 +113,99 @@ mod tests {
     #[test]
     fn test_next_token() {
         let input = r#"
-            let five = 5;
+let five = 5;
+let ten = 10;
+
+let add = fn(x, y) {
+  x + y;
+};
+
+let result = add(five, ten);
+!-/*5;
+5 < 10 > 5;
+
+if (5 < 10) {
+	return true;
+} else {
+	return false;
+}
+
+10 == 10;
+10 != 9;
          "#;
-//         let ten = 10;
-//         let add = fn( x, y) { x + y; };
-//         let result = add( five, ten);
-//        let input = r#"aiueo"#;
         let tests: Vec<Token> = vec![
             Token::LET,
             Token::IDENT(String::from("five")),
             Token::ASSIGN,
             Token::INT(5),
+            Token::SEMICOLON,
+            Token::LET,
+            Token::IDENT(String::from("ten")),
+            Token::ASSIGN,
+            Token::INT(10),
+            Token::SEMICOLON,
+            Token::LET,
+            Token::IDENT(String::from("add")),
+            Token::ASSIGN,
+            Token::FUNCTION,
+            Token::LPAREN,
+            Token::IDENT(String::from("x")),
+            Token::COMMA,
+            Token::IDENT(String::from("y")),
+            Token::RPAREN,
+            Token::LBRACE,
+            Token::IDENT(String::from("x")),
+            Token::PLUS,
+            Token::IDENT(String::from("y")),
+            Token::SEMICOLON,
+            Token::RBRACE,
+            Token::SEMICOLON,
+            Token::LET,
+            Token::IDENT(String::from("result")),
+            Token::ASSIGN,
+            Token::IDENT(String::from("add")),
+            Token::LPAREN,
+            Token::IDENT(String::from("five")),
+            Token::COMMA,
+            Token::IDENT(String::from("ten")),
+            Token::RPAREN,
+            Token::SEMICOLON,
+            Token::BANG,
+            Token::MINUS,
+            Token::SLASH,
+            Token::ASTERISK,
+            Token::INT(5),
+            Token::SEMICOLON,
+            Token::INT(5),
+            Token::LT,
+            Token::INT(10),
+            Token::GT,
+            Token::INT(5),
+            Token::SEMICOLON,
+            Token::IF,
+            Token::LPAREN,
+            Token::INT(5),
+            Token::LT,
+            Token::INT(10),
+            Token::RPAREN,
+            Token::LBRACE,
+            Token::RETURN,
+            Token::TRUE,
+            Token::SEMICOLON,
+            Token::RBRACE,
+            Token::ELSE,
+            Token::LBRACE,
+            Token::RETURN,
+            Token::FALSE,
+            Token::SEMICOLON,
+            Token::RBRACE,
+            Token::INT(10),
+            Token::EQ,
+            Token::INT(10),
+            Token::SEMICOLON,
+            Token::INT(10),
+            Token::NOT_EQ,
+            Token::INT(9),
             Token::SEMICOLON,
             Token::EOF,
         ];
