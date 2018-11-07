@@ -1,3 +1,4 @@
+// TODO IDENTとLITERALの違いは？
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
     ILLEGAL(String),
@@ -19,10 +20,18 @@ pub enum Token {
     LBRACE,
     RBRACE,
 
-    // キーワード
+    // キーワード(識別子)
     FUNCTION,
     LET,
-
     LITERAL(String),
 
+}
+
+// 識別子の判別
+pub fn lookup_ident(literal: &str) -> Token{
+    return match literal {
+        "fn" => Token::FUNCTION,
+        "let" => Token::LET,
+        _ => Token::IDENT(literal.to_string()),
+    };
 }

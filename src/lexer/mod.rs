@@ -1,19 +1,26 @@
+use token::lookup_ident;
 use token::Token;
 
 struct Lexer<'a> {
+    // 入力された文字列（ソース）
     input: &'a str,
+    // 現在位置
     position: usize,
+    // 読み込む位置
     read_position: usize,
+    // 現在読み込んだ文字（バイト）
     ch: u8,
 }
 
 impl<'a> Lexer<'a> {
+    // インスタンスの生成
     pub fn new(input: &str) -> Lexer {
         let mut lexer = Lexer { input, position: 0, read_position: 0, ch: 0 };
         lexer.read_char();
         return lexer;
     }
 
+    // 文字の読み込み
     pub fn read_char(&mut self) {
         if self.read_position >= self.input.len() {
             self.ch = 0;
@@ -23,7 +30,10 @@ impl<'a> Lexer<'a> {
         self.position = self.read_position;
         self.read_position += 1;
     }
+
+    // TOKENの取得
     pub fn next_token(&mut self) -> Token {
+        self.skip_whitespace();
         let token = match self.ch {
             b'+' => Token::PLUS,
             b'=' => Token::ASSIGN,
@@ -35,7 +45,9 @@ impl<'a> Lexer<'a> {
             b';' => Token::SEMICOLON,
             0 => Token::EOF,
             _ => if is_letter(self.ch) {
-                return Token::IDENT(self.read_identifier());
+                return lookup_ident(self.read_identifier());
+            } else if is_digit(self.ch) {
+                return Token::INT(self.read_number());
             } else {
                 return Token::ILLEGAL(self.ch.to_string());
             }
@@ -45,17 +57,35 @@ impl<'a> Lexer<'a> {
         return token;
     }
 
-    pub fn read_identifier(&mut self) -> String {
+    // 文字列の読み込み
+    pub fn read_identifier(&mut self) -> &str {
         let position = self.position;
         while is_letter(self.ch) {
             self.read_char();
         }
-        let s = self.input[position..self.position].to_string();
+        let s = &self.input[position..self.position];
         println!("read_identifier:{}", s);
         return s;
     }
+
+    // 文字列の読み込み
+    pub fn read_number(&mut self) -> u64 {
+        let position = self.position;
+        while is_digit(self.ch) {
+            self.read_char();
+        }
+        return self.input[position..self.position].parse().unwrap();
+    }
+
+    // 空白をスキップ
+    fn skip_whitespace(&mut self) {
+        while self.ch == b' ' || self.ch == b'\t' || self.ch == b'\n' || self.ch == b'\r' {
+            self.read_char();
+        }
+    }
 }
 
+// 文字列判定
 fn is_letter(ch: u8) -> bool {
     println!("is_letter arg:ch:{}, ch -> string:{}", ch, char::from(ch));
     println!("a(byte):{}", b'a');
@@ -63,7 +93,10 @@ fn is_letter(ch: u8) -> bool {
 
     return b'a' <= ch && ch <= b'z' || b'A' <= ch && ch <= b'Z' || ch == b'_';
 }
-
+// 数値判定
+fn is_digit(ch :u8)->bool{
+    return b'0' <= ch && ch <= b'9';
+}
 #[cfg(test)]
 mod tests {
     use lexer::Lexer;
@@ -71,20 +104,20 @@ mod tests {
 
     #[test]
     fn test_next_token() {
-//        let input = r#""
-//         let five = 5;
+        let input = r#"
+            let five = 5;
+         "#;
 //         let ten = 10;
 //         let add = fn( x, y) { x + y; };
 //         let result = add( five, ten);
-//         ""#;
-        let input = r#"aiueo"#;
+//        let input = r#"aiueo"#;
         let tests: Vec<Token> = vec![
-//            Token::LET,
-Token::IDENT(String::from("aiueo")),
-//            Token::ASSIGN,
-//            Token::INT(5),
-//            Token::SEMICOLON,
-Token::EOF,
+            Token::LET,
+            Token::IDENT(String::from("five")),
+            Token::ASSIGN,
+            Token::INT(5),
+            Token::SEMICOLON,
+            Token::EOF,
         ];
 
         let mut lexer = Lexer::new(input);
