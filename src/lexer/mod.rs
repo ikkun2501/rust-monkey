@@ -36,14 +36,24 @@ impl<'a> Lexer<'a> {
         self.skip_whitespace();
         let token = match self.ch {
             b'+' => Token::PLUS,
-            b'=' => Token::ASSIGN,
+            b'=' => if self.peek_char() == b'=' {
+                self.read_char();
+                Token::EQ
+            } else {
+                Token::ASSIGN
+            },
             b'(' => Token::LPAREN,
             b')' => Token::RPAREN,
             b'{' => Token::LBRACE,
             b'}' => Token::RBRACE,
             b',' => Token::COMMA,
             b';' => Token::SEMICOLON,
-            b'!' => Token::BANG,
+            b'!' => if self.peek_char() == b'=' {
+                self.read_char();
+                Token::NOT_EQ
+            } else {
+                Token::BANG
+            },
             b'-' => Token::MINUS,
             b'/' => Token::SLASH,
             b'*' => Token::ASTERISK,
@@ -74,7 +84,7 @@ impl<'a> Lexer<'a> {
         return s;
     }
 
-    // 文字列の読み込み
+    // 数値の読み込み
     pub fn read_number(&mut self) -> u64 {
         let position = self.position;
         while is_digit(self.ch) {
@@ -88,6 +98,11 @@ impl<'a> Lexer<'a> {
         while self.ch == b' ' || self.ch == b'\t' || self.ch == b'\n' || self.ch == b'\r' {
             self.read_char();
         }
+    }
+    fn peek_char(&mut self) -> u8 {
+        let peek_char = self.input.as_bytes()[self.read_position];
+        println!("peek_char:{}", char::from(peek_char));
+        return peek_char;
     }
 }
 
