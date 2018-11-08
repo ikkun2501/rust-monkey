@@ -1,7 +1,7 @@
 use token::lookup_ident;
 use token::Token;
 
-struct Lexer<'a> {
+pub struct Lexer<'a> {
     // 入力された文字列（ソース）
     input: &'a str,
     // 現在位置
