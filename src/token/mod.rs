@@ -1,53 +1,52 @@
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
-    ILLEGAL(String),
-    EOF,
+    Illegal(String),
+    Eof,
     // 識別子
-    IDENT(String),
+    Ident(String),
     // 整数
-    INT(u64),
+    Int(u64),
 
     // 演算子
-    ASSIGN,
-    PLUS,
-    MINUS ,
-    BANG,
-    ASTERISK,
-    SLASH,
-    LT,
-    GT,
-    EQ,
-    NOT_EQ,
+    Assign,
+    Plus,
+    Minus,
+    Bang,
+    Asterisk,
+    Slash,
+    LessThan,
+    GreaterThan,
+    Eq,
+    NotEq,
 
     // デリミタ
-    COMMA,
-    SEMICOLON,
-    LPAREN,
-    RPAREN,
-    LBRACE,
-    RBRACE,
+    Comma,
+    Semicolon,
+    Lparen,
+    Rparen,
+    Lbrace,
+    Rbrace,
 
     // キーワード(識別子)
-    FUNCTION,
-    LET,
-    TRUE,
-    FALSE,
-    IF,
-    ELSE,
-    RETURN,
+    Function,
+    Let,
+    Bool(bool),
+    If,
+    Else,
+    Return,
 
 }
 
 // 識別子の判別
 pub fn lookup_ident(literal: &str) -> Token {
     return match literal {
-        "fn" => Token::FUNCTION,
-        "let" => Token::LET,
-        "true" => Token::TRUE,
-        "false" => Token::FALSE,
-        "if" => Token::IF,
-        "else" => Token::ELSE,
-        "return" => Token::RETURN,
-        _ => Token::IDENT(literal.to_string()),
+        "fn" => Token::Function,
+        "let" => Token::Let,
+        "true" => Token::Bool(true),
+        "false" => Token::Bool(false),
+        "if" => Token::If,
+        "else" => Token::Else,
+        "return" => Token::Return,
+        _ => Token::Ident(literal.to_string()),
     };
 }
