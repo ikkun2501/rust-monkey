@@ -65,7 +65,7 @@ impl<'a> Lexer<'a> {
             } else if is_digit(self.ch) {
                 return Token::Int(self.read_number());
             } else {
-                return Token::Illegal(self.ch.to_string());
+                return Token::Illegal;
             }
         };
 
@@ -80,7 +80,7 @@ impl<'a> Lexer<'a> {
             self.read_char();
         }
         let s = &self.input[position..self.position];
-        println!("read_identifier:{}", s);
+//        println!("read_identifier:{}", s);
         return s;
     }
 
@@ -101,16 +101,16 @@ impl<'a> Lexer<'a> {
     }
     fn peek_char(&mut self) -> u8 {
         let peek_char = self.input.as_bytes()[self.read_position];
-        println!("peek_char:{}", char::from(peek_char));
+//        println!("peek_char:{}", char::from(peek_char));
         return peek_char;
     }
 }
 
 // 文字列判定
 fn is_letter(ch: u8) -> bool {
-    println!("is_letter arg:ch:{}, ch -> string:{}", ch, char::from(ch));
-    println!("a(byte):{}", b'a');
-    println!("z(byte):{}", b'z');
+//    println!("is_letter arg:ch:{}, ch -> string:{}", ch, char::from(ch));
+//    println!("a(byte):{}", b'a');
+//    println!("z(byte):{}", b'z');
 
     return b'a' <= ch && ch <= b'z' || b'A' <= ch && ch <= b'Z' || ch == b'_';
 }

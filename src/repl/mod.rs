@@ -12,11 +12,12 @@ pub fn start() {
 
         let mut lexer: lexer::Lexer = lexer::Lexer::new(s.as_ref());
 
-        let token = lexer.next_token();
-        while token != Token::Eof {
+        loop {
+            let mut token = lexer.next_token();
             println!("{:?}", token);
-            let token = lexer.next_token();
+            if token == Token::Eof || token == Token::Illegal {
+                break;
+            }
         }
-//        println!("{}", s)
     }
 }

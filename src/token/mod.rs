@@ -1,6 +1,6 @@
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
-    Illegal(String),
+    Illegal,
     Eof,
     // 識別子
     Ident(String),
@@ -47,6 +47,6 @@ pub fn lookup_ident(literal: &str) -> Token {
         "if" => Token::If,
         "else" => Token::Else,
         "return" => Token::Return,
-        _ => Token::Ident(literal.to_string()),
+        _ => Token::Ident(String::from(literal)),
     };
 }
