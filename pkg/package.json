@@ -1,0 +1,15 @@
+{
+  "name": "rust-monkey",
+  "collaborators": [
+    "ikkun2501 <ikkun2501@gmail.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "rust_monkey_bg.wasm",
+    "rust_monkey.js",
+    "rust_monkey.d.ts"
+  ],
+  "module": "rust_monkey.js",
+  "types": "rust_monkey.d.ts",
+  "sideEffects": "false"
+}
